@@ -70,11 +70,11 @@ const userSchema = new mongoose.Schema({
     expiresAt: { type: Date },
     attempts: { type: Number, default: 0 }
   },
-  clubId: {
+  managedClubs: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Club',
-    default: null
-  },
+    default: undefined
+  }],
   bookmarkedEvents: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Event'
@@ -99,7 +99,7 @@ const userSchema = new mongoose.Schema({
 
 // ─── Virtuals ─────────────────────────────────────────────────────────────────
 userSchema.virtual('isVITAPStudent').get(function () {
-  return this.email.includes('@vitap') || (this.studentId && this.studentId.trim() !== '');
+  return this.email.endsWith('@vitapstudent.ac.in');
 });
 
 // ─── Pre-save Hook: Hash Password ─────────────────────────────────────────────
@@ -128,5 +128,6 @@ userSchema.methods.toPublicJSON = function () {
 userSchema.index({ role: 1 });
 userSchema.index({ googleId: 1 }, { sparse: true });
 userSchema.index({ studentId: 1 });
+userSchema.index({ managedClubs: 1 });
 
 module.exports = mongoose.model('User', userSchema);

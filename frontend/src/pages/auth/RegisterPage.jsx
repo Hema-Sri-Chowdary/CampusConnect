@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { authAPI } from '../../api/axios';
+import { authAPI, clubsAPI } from '../../api/axios';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, Mail, Lock, User, Phone, Building, IdCard, Zap, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Phone, Building, IdCard, ArrowRight, Check } from 'lucide-react';
+
+const VIT_DOMAINS = ['@vitapstudent.ac.in', '@vitap.ac.in', '@vit.ac.in'];
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -16,12 +18,21 @@ const schema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirmPassword: z.string(),
   role: z.enum(['student', 'coordinator']),
-}).refine(d => d.password === d.confirmPassword, { message: 'Passwords do not match', path: ['confirmPassword'] });
+}).refine(d => d.password === d.confirmPassword, { message: 'Passwords do not match', path: ['confirmPassword'] })
+  .refine(d => {
+    if (d.role === 'coordinator') {
+      return VIT_DOMAINS.some(domain => d.email.endsWith(domain));
+    }
+    return true;
+  }, { message: 'Coordinators must use a VIT email (@vitapstudent.ac.in, @vitap.ac.in, or @vit.ac.in)', path: ['email'] });
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [clubs, setClubs] = useState([]);
+  const [selectedClubs, setSelectedClubs] = useState([]);
+  const [clubsLoading, setClubsLoading] = useState(false);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -30,10 +41,40 @@ export default function RegisterPage() {
 
   const role = watch('role');
 
+  // Fetch clubs when coordinator is selected
+  useEffect(() => {
+    if (role === 'coordinator') {
+      setClubsLoading(true);
+      clubsAPI.getAll()
+        .then(res => setClubs(res.data.data || []))
+        .catch(() => toast.error('Failed to load clubs list'))
+        .finally(() => setClubsLoading(false));
+    } else {
+      setSelectedClubs([]);
+    }
+  }, [role]);
+
+  const toggleClub = (clubId) => {
+    setSelectedClubs(prev => {
+      if (prev.includes(clubId)) return prev.filter(id => id !== clubId);
+      if (prev.length >= 10) { toast.error('You can select at most 10 clubs'); return prev; }
+      return [...prev, clubId];
+    });
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL || '/api'}/auth/google`;
+  };
+
   const onSubmit = async (data) => {
+    if (data.role === 'coordinator' && selectedClubs.length === 0) {
+      toast.error('Please select at least 1 club to coordinate.');
+      return;
+    }
     setLoading(true);
     try {
       const { confirmPassword, ...payload } = data;
+      if (data.role === 'coordinator') payload.managedClubs = selectedClubs;
       const res = await authAPI.register(payload);
       toast.success('Account created! Please verify your email.');
       navigate('/verify-otp', { state: { userId: res.data.userId, email: data.email, devOtp: res.data.devOtp } });
@@ -44,17 +85,10 @@ export default function RegisterPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL || '/api'}/auth/google`;
-  };
-
   return (
-    <div className="min-h-screen bg-mesh flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, #1a4a7a 0%, #123456 50%, #0a1e33 100%)' }}>
       <div className="w-full max-w-lg animate-fade-in">
-        <div className="flex items-center gap-2.5 justify-center mb-8">
-          <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center shadow-glow">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
+        <div className="flex items-center justify-center mb-8">
           <span className="font-display font-bold text-2xl gradient-text">CampusConnect</span>
         </div>
 
@@ -118,6 +152,9 @@ export default function RegisterPage() {
                 <input {...register('email')} type="email" placeholder="" className={`input pl-10 ${errors.email ? 'input-error' : ''}`} />
               </div>
               {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
+              {role === 'coordinator' && (
+                <p className="text-dark-100 text-xs mt-1">Must be a VIT email: @vitapstudent.ac.in, @vitap.ac.in, or @vit.ac.in</p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -159,6 +196,50 @@ export default function RegisterPage() {
                 {errors.confirmPassword && <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>}
               </div>
             </div>
+
+            {/* Club Selection for Coordinators */}
+            {role === 'coordinator' && (
+              <div>
+                <label className="label">
+                  Select Your Club(s) <span className="text-dark-100">(choose 1–10)</span>
+                  {selectedClubs.length > 0 && (
+                    <span className="ml-2 text-primary-400 font-semibold">{selectedClubs.length} selected</span>
+                  )}
+                </label>
+                {clubsLoading ? (
+                  <div className="flex items-center gap-2 py-4 text-dark-100 text-sm">
+                    <div className="w-4 h-4 spinner" /> Loading clubs...
+                  </div>
+                ) : clubs.length === 0 ? (
+                  <p className="text-dark-100 text-sm py-2">No clubs available yet.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1 mt-1">
+                    {clubs.map(club => {
+                      const isSelected = selectedClubs.includes(club._id);
+                      return (
+                        <button
+                          key={club._id}
+                          type="button"
+                          onClick={() => toggleClub(club._id)}
+                          className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left text-sm transition-all ${
+                            isSelected
+                              ? 'bg-primary-500/20 border-primary-500/60 text-primary-300'
+                              : 'bg-dark-800/60 border-dark-700 text-dark-100 hover:border-dark-600 hover:text-white'
+                          }`}
+                        >
+                          <span className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 transition-all ${
+                            isSelected ? 'bg-primary-500' : 'border border-dark-600'
+                          }`}>
+                            {isSelected && <Check className="w-3 h-3 text-white" />}
+                          </span>
+                          <span className="truncate font-medium">{club.clubName}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
 
             <button type="submit" disabled={loading} className="btn btn-primary w-full justify-center btn-lg mt-2">
               {loading ? <div className="w-5 h-5 spinner" /> : <>

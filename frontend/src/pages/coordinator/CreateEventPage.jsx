@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Upload, X } from 'lucide-react';
 
 const CATEGORIES = ['technical', 'coding', 'hackathon', 'workshop', 'cultural', 'sports', 'entrepreneurship', 'ai-ml', 'robotics', 'other'];
+const TODAY = new Date().toISOString().split('T')[0];
 
 export default function CreateEventPage() {
   const navigate = useNavigate();
@@ -54,12 +55,12 @@ export default function CreateEventPage() {
         <div className="card p-6 space-y-4">
           <h2 className="font-semibold text-white">Date, Time & Venue</h2>
           <div className="grid grid-cols-3 gap-4">
-            <div><label className="label">Event Date *</label><input {...register('date', { required: true })} type="date" className="input" /></div>
+            <div><label className="label">Event Date *</label><input {...register('date', { required: true })} type="date" min={TODAY} className="input" /></div>
             <div><label className="label">Start Time *</label><input {...register('time.start', { required: true })} type="time" className="input" /></div>
             <div><label className="label">End Time</label><input {...register('time.end')} type="time" className="input" /></div>
           </div>
           <div><label className="label">Venue Name *</label><input {...register('venue.name', { required: true })} placeholder="e.g., MBA Seminar Hall" className="input" /></div>
-          <div><label className="label">Registration Deadline *</label><input {...register('registrationDeadline', { required: true })} type="date" className="input" /></div>
+          <div><label className="label">Registration Deadline *</label><input {...register('registrationDeadline', { required: true })} type="date" min={TODAY} className="input" /></div>
         </div>
         <div className="card p-6 space-y-4">
           <h2 className="font-semibold text-white">Capacity & Fees</h2>

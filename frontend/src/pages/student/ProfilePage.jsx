@@ -5,7 +5,7 @@ import { authAPI } from '../../api/axios';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { User, Phone, Building, IdCard, Camera, Lock, Eye, EyeOff, Trash2, AlertTriangle, X } from 'lucide-react';
+import { User, Phone, Building, IdCard, Camera, Lock, Eye, EyeOff, Trash2, X } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, updateUser, logout } = useAuth();
@@ -107,14 +107,8 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* Danger Zone Card */}
+      {/* Delete Account */}
       <div className="card p-6 border border-red-500/20 bg-red-500/5">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
-            <AlertTriangle className="w-4 h-4 text-red-400" />
-          </div>
-          <h2 className="text-lg font-display font-bold text-red-400">Danger Zone</h2>
-        </div>
         <p className="text-dark-100 text-sm mb-4">
           Permanently delete your account and all associated data including registrations, payments, and certificates. <strong className="text-red-400">This action cannot be undone.</strong>
         </p>

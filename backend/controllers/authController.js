@@ -22,21 +22,34 @@ const sendTokenResponse = (user, statusCode, res, message = 'Success') => {
 // POST /api/auth/register
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, phone, college, studentId, role } = req.body;
+    const { name, email, password, phone, college, studentId, role, managedClubs } = req.body;
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(400).json({ success: false, message: 'Email already registered.' });
     }
     const allowedRoles = ['student', 'coordinator'];
     const userRole = allowedRoles.includes(role) ? role : 'student';
+
+    // Validate coordinator email domain
+    const VIT_DOMAINS = ['@vitapstudent.ac.in', '@vitap.ac.in', '@vit.ac.in'];
+    if (userRole === 'coordinator' && !VIT_DOMAINS.some(d => email.endsWith(d))) {
+      return res.status(400).json({ success: false, message: 'Coordinators must register with a VIT email (@vitapstudent.ac.in, @vitap.ac.in, or @vit.ac.in).' });
+    }
+
     const otp = generateOTP();
     const otpExpiry = getOTPExpiry();
-    const user = await User.create({
+
+    const userData = {
       name, email, password, phone, college, studentId,
       role: userRole,
       isApproved: userRole === 'student',
       otp: { code: otp, expiresAt: otpExpiry }
-    });
+    };
+    if (userRole === 'coordinator' && Array.isArray(managedClubs) && managedClubs.length > 0) {
+      userData.managedClubs = managedClubs.slice(0, 10);
+    }
+
+    const user = await User.create(userData);
     
     try {
       await sendOTPEmail(email, name, otp);
@@ -65,18 +78,16 @@ exports.verifyOTP = async (req, res, next) => {
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     if (user.isVerified) return res.status(400).json({ success: false, message: 'Account already verified.' });
     
-    if (otp !== '123456') {
-      if (!user.otp.code || new Date() > user.otp.expiresAt) {
-        return res.status(400).json({ success: false, message: 'OTP expired. Please request a new one.' });
-      }
-      if (user.otp.attempts >= 5) {
-        return res.status(429).json({ success: false, message: 'Too many attempts. Please request a new OTP.' });
-      }
-      if (user.otp.code !== otp) {
-        user.otp.attempts += 1;
-        await user.save();
-        return res.status(400).json({ success: false, message: 'Invalid OTP.' });
-      }
+    if (!user.otp.code || new Date() > user.otp.expiresAt) {
+      return res.status(400).json({ success: false, message: 'OTP expired. Please request a new one.' });
+    }
+    if (user.otp.attempts >= 5) {
+      return res.status(429).json({ success: false, message: 'Too many attempts. Please request a new OTP.' });
+    }
+    if (user.otp.code !== otp) {
+      user.otp.attempts += 1;
+      await user.save();
+      return res.status(400).json({ success: false, message: 'Invalid OTP.' });
     }
     
     user.isVerified = true;
@@ -129,6 +140,13 @@ exports.login = async (req, res, next) => {
     if (!user.isActive) return res.status(403).json({ success: false, message: 'Account deactivated. Contact support.' });
     if (!user.isVerified) {
       return res.status(403).json({ success: false, message: 'Please verify your email first.', userId: user._id, requiresVerification: true });
+    }
+    // Validate coordinator email domain
+    if (user.role === 'coordinator') {
+      const VIT_DOMAINS = ['@vitapstudent.ac.in', '@vitap.ac.in', '@vit.ac.in'];
+      if (!VIT_DOMAINS.some(d => email.endsWith(d))) {
+        return res.status(403).json({ success: false, message: 'Coordinator login requires a VIT email (@vitapstudent.ac.in, @vitap.ac.in, or @vit.ac.in).' });
+      }
     }
     user.lastLogin = new Date();
     await user.save();
@@ -231,14 +249,11 @@ exports.resetPassword = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
 
-    if (otp !== '123456') {
-      if (!user.resetPasswordToken || user.resetPasswordToken !== otp) {
-        return res.status(400).json({ success: false, message: 'Invalid OTP code.' });
-      }
-
-      if (new Date() > user.resetPasswordExpires) {
-        return res.status(400).json({ success: false, message: 'OTP code has expired. Please request a new one.' });
-      }
+    if (!user.resetPasswordToken || user.resetPasswordToken !== otp) {
+      return res.status(400).json({ success: false, message: 'Invalid OTP code.' });
+    }
+    if (new Date() > user.resetPasswordExpires) {
+      return res.status(400).json({ success: false, message: 'OTP code has expired. Please request a new one.' });
     }
 
     user.password = newPassword;

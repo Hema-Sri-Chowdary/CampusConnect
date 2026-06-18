@@ -55,6 +55,16 @@ exports.createEvent = async (req, res, next) => {
     const coordinator = req.user;
     const club = await Club.findOne({ coordinatorId: coordinator._id });
     if (!club) return res.status(400).json({ success: false, message: 'No club associated with your account.' });
+
+    // Validate dates are not in the past
+    const now = new Date();
+    if (req.body.date && new Date(req.body.date) < now) {
+      return res.status(400).json({ success: false, message: 'Event date cannot be in the past.' });
+    }
+    if (req.body.registrationDeadline && new Date(req.body.registrationDeadline) < now) {
+      return res.status(400).json({ success: false, message: 'Registration deadline cannot be in the past.' });
+    }
+
     const { title } = req.body;
     let slug = slugify(title, { lower: true, strict: true });
     const existing = await Event.findOne({ slug });
@@ -73,6 +83,14 @@ exports.updateEvent = async (req, res, next) => {
     if (!event) return res.status(404).json({ success: false, message: 'Event not found.' });
     if (req.user.role !== 'admin' && event.organizer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized to edit this event.' });
+    }
+    // Validate dates are not in the past
+    const now = new Date();
+    if (req.body.date && new Date(req.body.date) < now) {
+      return res.status(400).json({ success: false, message: 'Event date cannot be in the past.' });
+    }
+    if (req.body.registrationDeadline && new Date(req.body.registrationDeadline) < now) {
+      return res.status(400).json({ success: false, message: 'Registration deadline cannot be in the past.' });
     }
     if (req.file) req.body.banner = `/uploads/images/${req.file.filename}`;
     const updated = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });

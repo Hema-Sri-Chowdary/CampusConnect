@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { authAPI } from '../../api/axios';
 import toast from 'react-hot-toast';
-import { Mail, Zap, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Mail, ArrowRight, ArrowLeft } from 'lucide-react';
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -41,13 +41,10 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-mesh flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, #1a4a7a 0%, #123456 50%, #0a1e33 100%)' }}>
       <div className="w-full max-w-md animate-fade-in">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 justify-center mb-8">
-          <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center shadow-glow">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
+        <div className="flex items-center justify-center mb-8">
           <span className="font-display font-bold text-2xl gradient-text">CampusConnect</span>
         </div>
 
