@@ -33,7 +33,7 @@ exports.createClub = async (req, res, next) => {
   try {
     const { clubName } = req.body;
     const slug = slugify(clubName, { lower: true, strict: true });
-    const logoPath = req.file ? `/uploads/images/${req.file.filename}` : '';
+    const logoPath = req.file ? req.file.path : ''; // Cloudinary CDN URL
     const club = await Club.create({ ...req.body, slug, coordinatorId: req.user._id, logo: logoPath, isApproved: req.user.role === 'admin' });
     await User.findByIdAndUpdate(req.user._id, { clubId: club._id });
     res.status(201).json({ success: true, message: 'Club created. Pending admin approval.', data: club });
@@ -48,7 +48,7 @@ exports.updateClub = async (req, res, next) => {
     if (club.coordinatorId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized.' });
     }
-    if (req.file) req.body.logo = `/uploads/images/${req.file.filename}`;
+    if (req.file) req.body.logo = req.file.path; // Cloudinary CDN URL
     const updated = await Club.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     res.json({ success: true, message: 'Club updated.', data: updated });
   } catch (err) { next(err); }

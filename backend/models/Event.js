@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+const getImageUrl = require('../utils/getImageUrl');
+
 const eventSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -24,7 +26,8 @@ const eventSchema = new mongoose.Schema({
   },
   banner: {
     type: String,
-    default: ''
+    default: '',
+    get: getImageUrl
   },
   category: {
     type: String,
@@ -125,8 +128,8 @@ const eventSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toJSON: { virtuals: true, getters: true },
+  toObject: { virtuals: true, getters: true }
 });
 
 // ─── Virtuals ─────────────────────────────────────────────────────────────────

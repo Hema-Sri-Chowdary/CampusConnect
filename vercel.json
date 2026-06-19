@@ -13,22 +13,18 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "backend/api/index.js"
+      "source": "/api/:path*",
+      "destination": "backend/api/index.js"
     },
     {
-      "src": "/health",
-      "dest": "backend/api/index.js"
+      "source": "/health",
+      "destination": "backend/api/index.js"
     },
     {
-      "src": "/uploads/(.*)",
-      "dest": "backend/api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
+      "source": "/((?!api|health|assets|favicon.ico).*)" ,
+      "destination": "/index.html"
     }
   ]
 }

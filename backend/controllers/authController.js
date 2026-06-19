@@ -190,7 +190,7 @@ exports.updateProfile = async (req, res, next) => {
     const allowedFields = ['name', 'phone', 'college', 'studentId'];
     const updates = {};
     allowedFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
-    if (req.file) updates.profilePicture = `/uploads/images/${req.file.filename}`;
+    if (req.file) updates.profilePicture = req.file.path; // Cloudinary CDN URL
     const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true, runValidators: true });
     res.json({ success: true, message: 'Profile updated.', user });
   } catch (err) {

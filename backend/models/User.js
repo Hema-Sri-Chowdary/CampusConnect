@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const getImageUrl = require('../utils/getImageUrl');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -43,7 +45,8 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: ''
+    default: '',
+    get: getImageUrl
   },
   googleId: {
     type: String,
@@ -93,8 +96,8 @@ const userSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toJSON: { virtuals: true, getters: true },
+  toObject: { virtuals: true, getters: true }
 });
 
 // ─── Virtuals ─────────────────────────────────────────────────────────────────

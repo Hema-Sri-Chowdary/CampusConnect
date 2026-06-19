@@ -69,7 +69,7 @@ exports.createEvent = async (req, res, next) => {
     let slug = slugify(title, { lower: true, strict: true });
     const existing = await Event.findOne({ slug });
     if (existing) slug = `${slug}-${Date.now()}`;
-    const bannerPath = req.file ? `/uploads/images/${req.file.filename}` : '';
+    const bannerPath = req.file ? req.file.path : ''; // Cloudinary CDN URL
     const event = await Event.create({ ...req.body, slug, clubId: club._id, organizer: coordinator._id, banner: bannerPath });
     await Club.findByIdAndUpdate(club._id, { $inc: { totalEvents: 1 } });
     res.status(201).json({ success: true, message: 'Event created successfully.', data: event });
@@ -92,7 +92,7 @@ exports.updateEvent = async (req, res, next) => {
     if (req.body.registrationDeadline && new Date(req.body.registrationDeadline) < now) {
       return res.status(400).json({ success: false, message: 'Registration deadline cannot be in the past.' });
     }
-    if (req.file) req.body.banner = `/uploads/images/${req.file.filename}`;
+    if (req.file) req.body.banner = req.file.path; // Cloudinary CDN URL
     const updated = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     res.json({ success: true, message: 'Event updated.', data: updated });
   } catch (err) { next(err); }

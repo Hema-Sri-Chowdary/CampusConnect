@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const getImageUrl = require('../utils/getImageUrl');
+
 const clubSchema = new mongoose.Schema({
   clubName: {
     type: String,
@@ -20,11 +22,13 @@ const clubSchema = new mongoose.Schema({
   },
   logo: {
     type: String,
-    default: ''
+    default: '',
+    get: getImageUrl
   },
   coverImage: {
     type: String,
-    default: ''
+    default: '',
+    get: getImageUrl
   },
   category: {
     type: String,
@@ -67,8 +71,8 @@ const clubSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toJSON: { virtuals: true, getters: true },
+  toObject: { virtuals: true, getters: true }
 });
 
 // ─── Indexes ──────────────────────────────────────────────────────────────────
