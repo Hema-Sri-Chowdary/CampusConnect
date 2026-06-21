@@ -9,31 +9,45 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#f0f0ff',
-          100: '#e0e0ff',
-          200: '#c4c4ff',
-          300: '#a29aff',
-          400: '#8b7dff',
-          500: '#6C63FF',
-          600: '#5a4dff',
-          700: '#4a3de6',
-          800: '#3b2fc9',
-          900: '#2d22a6',
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#4F46E5', // Primary Indigo
+          600: '#4338ca', // Hover Indigo
+          700: '#3730a3', // Dark Indigo
+          800: '#312e81',
+          900: '#1e1b4b',
         },
         accent: {
-          50: '#ecfdf5',
-          500: '#10b981',
-          600: '#059669',
+          50: '#ecfeff',
+          500: '#06B6D4', // Accent Cyan
+          600: '#0891b2',
         },
         dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+          50: '#F8FAFC',  // Background
+          100: '#6B7280', // Muted Text
+          200: '#E2E8F0', // Border
+          300: '#111827', // Text Primary
+          700: '#cbd5e1',
+          800: '#F1F5F9', // Surface / gray-100 (for inputs, secondary buttons)
+          900: '#FFFFFF', // Card/Surface Background (White)
+          950: '#F8FAFC', // Background
         }
+      },
+      fontSize: {
+        'xs': ['14px', { lineHeight: '20px' }],
+        'sm': ['16px', { lineHeight: '24px' }],
+        'base': ['18px', { lineHeight: '28px' }],
+        'lg': ['20px', { lineHeight: '28px' }],
+        'xl': ['22px', { lineHeight: '32px' }],
+        '2xl': ['26px', { lineHeight: '34px' }],
+        '3xl': ['32px', { lineHeight: '38px' }],
+        '4xl': ['38px', { lineHeight: '44px' }],
+        '5xl': ['50px', { lineHeight: '1' }],
+        '6xl': ['62px', { lineHeight: '1' }],
+        '7xl': ['74px', { lineHeight: '1' }],
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

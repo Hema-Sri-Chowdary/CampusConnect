@@ -10,7 +10,7 @@ export default function VerifyOTPPage() {
   const location = useLocation();
   const { login } = useAuth();
   const { userId, email, devOtp } = location.state || {};
-  const [otp, setOtp] = useState(() => devOtp ? devOtp.split('') : ['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [timer, setTimer] = useState(600);

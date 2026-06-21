@@ -24,7 +24,7 @@ export default function EditEventPage() {
   });
   return (
     <div className="animate-fade-in max-w-3xl">
-      <h1 className="text-2xl font-display font-bold text-white mb-6">Edit Event ✏️</h1>
+      <h1 className="text-2xl font-display font-bold text-white mb-6">Edit Event</h1>
       <form onSubmit={handleSubmit(d => mutation.mutate(d))} className="space-y-6">
         <div className="card p-6 space-y-4">
           <h2 className="font-semibold text-white">Event Details</h2>

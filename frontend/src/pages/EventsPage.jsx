@@ -77,7 +77,7 @@ export default function EventsPage() {
   return (
     <div className="page-container">
       <div className="mb-8">
-        <h1 className="section-title mb-2">Explore Events 🎉</h1>
+        <h1 className="section-title mb-2">Explore Events</h1>
         <p className="text-dark-100">Discover and register for events from all college clubs</p>
       </div>
 

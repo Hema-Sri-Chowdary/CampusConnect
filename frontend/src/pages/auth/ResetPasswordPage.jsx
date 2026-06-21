@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { authAPI } from '../../api/axios';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, Mail, Lock, KeyRound, Zap, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Hash, Zap, ArrowRight, ArrowLeft } from 'lucide-react';
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -69,7 +69,7 @@ export default function ResetPasswordPage() {
             Back to login
           </Link>
 
-          <h1 className="text-2xl font-display font-bold text-white mb-1">Reset Password 🔑</h1>
+          <h1 className="text-2xl font-display font-bold text-white mb-1">Reset Password</h1>
           <p className="text-dark-100 text-sm mb-6">Enter the OTP code received in your email and choose a new password.</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -91,7 +91,7 @@ export default function ResetPasswordPage() {
             <div>
               <label className="label">OTP Code</label>
               <div className="relative">
-                <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" />
+                <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" />
                 <input
                   {...register('otp')}
                   type="text"

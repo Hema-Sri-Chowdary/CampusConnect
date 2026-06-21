@@ -44,10 +44,10 @@ export default function StudentDashboard() {
         <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
         <div className="relative">
           <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-1">
-            Welcome back, {user?.name?.split(' ')[0]}! 👋
+            Welcome back, {user?.name?.split(' ')[0]}!
           </h1>
           <p className="text-white/70 text-sm">
-            {user?.email?.includes('@vitap') ? '🎓 VIT AP Student' : '🏫 Student'} · {user?.college || 'College not set'}
+            {user?.email?.includes('@vitap') ? 'VIT AP Student' : 'Student'} · {user?.college || 'College not set'}
           </p>
         </div>
       </div>

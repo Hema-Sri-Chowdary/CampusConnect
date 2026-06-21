@@ -31,12 +31,12 @@ export default function CreateEventPage() {
 
   return (
     <div className="animate-fade-in max-w-3xl">
-      <h1 className="text-2xl font-display font-bold text-white mb-6">Create New Event 🎉</h1>
+      <h1 className="text-2xl font-display font-bold text-white mb-6">Create New Event</h1>
       <form onSubmit={handleSubmit(d => mutation.mutate(d))} className="space-y-6">
         <div className="card p-6">
           <h2 className="font-semibold text-white mb-4">Event Banner</h2>
           <div className="relative border-2 border-dashed border-dark-700 rounded-2xl overflow-hidden hover:border-primary-500/50 transition-colors cursor-pointer" onClick={() => document.getElementById('banner-input').click()}>
-            {bannerPreview ? <img src={bannerPreview} alt="Banner" className="w-full h-48 object-cover" />
+            {bannerPreview ? <img src={bannerPreview} alt="Banner" className="w-full h-auto max-h-64 object-contain mx-auto" />
               : <div className="flex flex-col items-center justify-center h-48 text-dark-100 gap-3"><Upload className="w-10 h-10" /><p className="text-sm">Click to upload event banner</p></div>}
             {bannerPreview && <button type="button" onClick={e => { e.stopPropagation(); setBannerFile(null); setBannerPreview(null); }} className="absolute top-2 right-2 bg-dark-950/80 text-white rounded-full p-1 hover:bg-red-500 transition-colors"><X className="w-4 h-4" /></button>}
           </div>

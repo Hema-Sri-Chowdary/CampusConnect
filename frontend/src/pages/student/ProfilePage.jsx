@@ -5,7 +5,7 @@ import { authAPI } from '../../api/axios';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { User, Phone, Building, IdCard, Camera, Lock, Eye, EyeOff, Trash2, X } from 'lucide-react';
+import { User, Phone, Building, IdCard, Camera, Lock, Eye, EyeOff, Trash2, X, LogOut, GraduationCap, BookOpen } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, updateUser, logout } = useAuth();
@@ -16,8 +16,21 @@ export default function ProfilePage() {
   const [deletePassword, setDeletePassword] = useState('');
   const [showDeletePass, setShowDeletePass] = useState(false);
 
+  const profileFields = [
+    user?.name,
+    user?.email,
+    user?.phone,
+    user?.college,
+    user?.studentId,
+    user?.year,
+    user?.branch,
+    user?.profilePicture
+  ];
+  const filledFieldsCount = profileFields.filter(f => f && f !== '').length;
+  const fillPercentage = Math.round((filledFieldsCount / profileFields.length) * 100);
+
   const { register, handleSubmit } = useForm({
-    defaultValues: { name: user?.name, phone: user?.phone, college: user?.college, studentId: user?.studentId }
+    defaultValues: { name: user?.name, phone: user?.phone, college: user?.college, studentId: user?.studentId, year: user?.year, branch: user?.branch }
   });
   const { register: regPass, handleSubmit: hsPass, reset: resetPass } = useForm();
 
@@ -59,6 +72,22 @@ export default function ProfilePage() {
     <div className="animate-fade-in max-w-2xl space-y-6">
       <h1 className="text-2xl font-display font-bold text-white">My Profile</h1>
 
+      {/* Profile Completion Progress */}
+      <div className="card p-6 border-primary-500/20 bg-primary-500/5">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-semibold text-white">Profile Completion</span>
+          <span className="text-sm font-bold text-primary-400">{fillPercentage}%</span>
+        </div>
+        <div className="w-full bg-dark-800 h-2.5 rounded-full overflow-hidden">
+          <div className="bg-primary-500 h-full transition-all duration-500" style={{ width: `${fillPercentage}%` }} />
+        </div>
+        {fillPercentage < 100 ? (
+          <p className="text-xs text-dark-100 mt-2">Fill in all your details and upload a profile picture to complete your profile.</p>
+        ) : (
+          <p className="text-xs text-emerald-400 mt-2 font-medium">✨ Your profile is 100% complete!</p>
+        )}
+      </div>
+
       {/* Profile Info Card */}
       <div className="card p-6">
         <div className="flex items-center gap-5 mb-6">
@@ -88,10 +117,22 @@ export default function ProfilePage() {
             <div><label className="label">Phone</label><div className="relative"><Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...register('phone')} className="input pl-10" /></div></div>
             <div><label className="label">College</label><div className="relative"><Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...register('college')} className="input pl-10" /></div></div>
             <div><label className="label">Student ID</label><div className="relative"><IdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...register('studentId')} className="input pl-10" /></div></div>
+            <div><label className="label">Year</label><div className="relative"><GraduationCap className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...register('year')} className="input pl-10" placeholder="e.g. 3rd Year" /></div></div>
+            <div><label className="label">Branch</label><div className="relative"><BookOpen className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...register('branch')} className="input pl-10" placeholder="e.g. CSE" /></div></div>
           </div>
-          <button type="submit" disabled={profileMutation.isPending} className="btn btn-primary">
-            {profileMutation.isPending ? <div className="w-4 h-4 spinner" /> : 'Save Changes'}
-          </button>
+          <div className="flex items-center justify-between gap-4 pt-2">
+            <button type="submit" disabled={profileMutation.isPending} className="btn btn-primary">
+              {profileMutation.isPending ? <div className="w-4 h-4 spinner" /> : 'Save Changes'}
+            </button>
+            <button
+              type="button"
+              onClick={() => { logout(); navigate('/login'); }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-red-500/10 border border-red-500/30 text-red-600 rounded-xl text-sm font-semibold hover:bg-red-500/20 hover:border-red-500/50 transition-all cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </div>
         </form>
       </div>
 
@@ -109,7 +150,7 @@ export default function ProfilePage() {
 
       {/* Delete Account */}
       <div className="card p-6 border border-red-500/20 bg-red-500/5">
-        <p className="text-dark-100 text-sm mb-4">
+        <p className="text-dark-300 text-sm mb-4">
           Permanently delete your account and all associated data including registrations, payments, and certificates. <strong className="text-red-400">This action cannot be undone.</strong>
         </p>
         <button
@@ -143,10 +184,10 @@ export default function ProfilePage() {
 
             {/* Warning */}
             <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
-              <p className="text-red-300 text-sm leading-relaxed">
+              <p className="text-red-800 text-sm leading-relaxed font-semibold">
                 Deleting your account will permanently remove:
               </p>
-              <ul className="text-red-300/80 text-xs mt-2 space-y-1 list-disc list-inside">
+              <ul className="text-red-800/90 text-xs mt-2 space-y-1 list-disc list-inside">
                 <li>Your profile and personal information</li>
                 <li>All event registrations</li>
                 <li>Payment history</li>

@@ -22,7 +22,7 @@ export default function CheckInPage() {
   };
   return (
     <div className="animate-fade-in max-w-lg space-y-6">
-      <h1 className="text-2xl font-display font-bold text-white">Event Check-In 📲</h1>
+      <h1 className="text-2xl font-display font-bold text-white">Event Check-In</h1>
       <div className="card p-6 space-y-4">
         <div><label className="label">Select Event</label><select value={selectedEvent} onChange={e => setSelectedEvent(e.target.value)} className="input py-2"><option value="">Choose an event</option>{events.filter(e => e.status === 'published').map(e => <option key={e._id} value={e._id} className="bg-dark-800">{e.title}</option>)}</select></div>
         <div>

@@ -93,12 +93,12 @@ export default function RegisterPage() {
         </div>
 
         <div className="card p-8">
-          <h1 className="text-2xl font-display font-bold text-white mb-1">Create your account 🚀</h1>
+          <h1 className="text-2xl font-display font-bold text-white mb-1">Create your account</h1>
           <p className="text-dark-100 text-sm mb-6">Join thousands of students on CampusConnect</p>
 
           {/* Role Toggle */}
           <div className="flex bg-dark-800/60 p-1 rounded-xl border border-dark-700 mb-5">
-            {[['student', '🎓 Student'], ['coordinator', '🎯 Coordinator']].map(([val, label]) => (
+            {[['student', '🎓 Student'], ['coordinator', '💼 Coordinator']].map(([val, label]) => (
               <label key={val} className={`flex-1 flex items-center justify-center py-2 rounded-lg text-sm font-medium cursor-pointer transition-all ${
                 role === val ? 'bg-primary-500 text-white shadow-glow' : 'text-dark-100 hover:text-white'
               }`}>

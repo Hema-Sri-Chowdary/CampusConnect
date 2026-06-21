@@ -11,7 +11,6 @@ const CATEGORIES = [
   { value: 'regional',       label: 'Regional',         icon: '🌍', color: 'text-green-400' },
   { value: 'professional',   label: 'Professional',     icon: '💼', color: 'text-amber-400' },
   { value: 'social_outreach',label: 'Social Outreach',  icon: '❤️', color: 'text-red-400' },
-  { value: 'other',          label: 'Other',            icon: '✨', color: 'text-dark-100' },
 ];
 
 const CATEGORY_BADGE = {
@@ -73,7 +72,7 @@ export default function ClubsPage() {
     <div className="page-container">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="section-title mb-2">College Clubs 🏆</h1>
+        <h1 className="section-title mb-2">College Clubs</h1>
         <p className="text-dark-100">Explore all active clubs and their upcoming events at VIT-AP University</p>
       </div>
 

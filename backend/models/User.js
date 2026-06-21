@@ -43,6 +43,16 @@ const userSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
+  year: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  branch: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   profilePicture: {
     type: String,
     default: '',

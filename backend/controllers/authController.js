@@ -42,7 +42,7 @@ exports.register = async (req, res, next) => {
     const userData = {
       name, email, password, phone, college, studentId,
       role: userRole,
-      isApproved: userRole === 'student',
+      isApproved: true,
       otp: { code: otp, expiresAt: otpExpiry }
     };
     if (userRole === 'coordinator' && Array.isArray(managedClubs) && managedClubs.length > 0) {
@@ -187,7 +187,7 @@ exports.changePassword = async (req, res, next) => {
 // PUT /api/auth/profile
 exports.updateProfile = async (req, res, next) => {
   try {
-    const allowedFields = ['name', 'phone', 'college', 'studentId'];
+    const allowedFields = ['name', 'phone', 'college', 'studentId', 'year', 'branch'];
     const updates = {};
     allowedFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
     if (req.file) updates.profilePicture = req.file.path; // Cloudinary CDN URL

@@ -7,7 +7,7 @@ export default function RevenueReportPage() {
   const events = data?.data || [];
   return (
     <div className="animate-fade-in space-y-6">
-      <h1 className="text-2xl font-display font-bold text-white">Revenue Report 💰</h1>
+      <h1 className="text-2xl font-display font-bold text-white">Revenue Report</h1>
       <div className="card p-6">
         <h2 className="font-semibold text-white mb-4">Event Revenue Summary</h2>
         {events.length > 0 ? (

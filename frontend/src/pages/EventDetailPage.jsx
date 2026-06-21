@@ -43,8 +43,8 @@ export default function EventDetailPage() {
   return (
     <div className="page-container">
       {/* Banner */}
-      <div className="relative h-72 md:h-96 rounded-3xl overflow-hidden mb-8 bg-dark-800">
-        {event.banner ? <img src={event.banner} alt={event.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-500/20 to-blue-500/20"><span className="text-8xl">🎉</span></div>}
+      <div className="relative rounded-3xl overflow-hidden mb-8 bg-dark-800 flex items-center justify-center">
+        {event.banner ? <img src={event.banner} alt={event.title} className="w-full h-auto max-h-[500px] object-contain" /> : <div className="w-full h-72 flex items-center justify-center bg-gradient-to-br from-primary-500/20 to-blue-500/20"><span className="text-8xl">🎉</span></div>}
         <div className="absolute inset-0 bg-gradient-to-t from-dark-950/90 via-dark-950/20 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6">
           <div className="flex flex-wrap gap-2 mb-3">

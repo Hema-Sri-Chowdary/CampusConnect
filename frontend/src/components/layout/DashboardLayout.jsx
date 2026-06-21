@@ -23,10 +23,10 @@ const studentLinks = [
 const coordinatorLinks = [
   { to: '/coordinator/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/coordinator/events', icon: Calendar, label: 'My Events' },
-  { to: '/coordinator/events/create', icon: PlusCircle, label: 'Create Event' },
+  { to: '/coordinator/events/create', icon: null, label: 'Create Event' },
   { to: '/coordinator/club', icon: Building, label: 'My Club' },
-  { to: '/coordinator/revenue', icon: BarChart2, label: 'Revenue' },
-  { to: '/coordinator/checkin', icon: QrCode, label: 'Check-In' },
+  { to: '/coordinator/revenue', icon: null, label: 'Revenue' },
+  { to: '/coordinator/checkin', icon: null, label: 'Check-In' },
   { to: '/coordinator/profile', icon: User, label: 'Profile' },
 ];
 
@@ -40,7 +40,7 @@ const adminLinks = [
 
 const linksByRole = { student: studentLinks, coordinator: coordinatorLinks, admin: adminLinks };
 
-const roleBadge = { student: 'bg-blue-500/15 text-blue-300', coordinator: 'bg-purple-500/15 text-purple-300', admin: 'bg-red-500/15 text-red-300' };
+const roleBadge = { student: 'bg-blue-50 text-blue-600 border border-blue-100', coordinator: 'bg-purple-50 text-purple-600 border border-purple-100', admin: 'bg-red-50 text-red-600 border border-red-100' };
 
 export default function DashboardLayout({ role }) {
   const { user, logout } = useAuth();
@@ -53,26 +53,26 @@ export default function DashboardLayout({ role }) {
   const handleLogout = () => { logout(); navigate('/'); };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full text-white">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-5 border-b border-dark-700/50">
-        <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center shadow-glow">
+      <div className="flex items-center gap-2.5 px-4 py-5 border-b border-white/10">
+        <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
           <Zap className="w-4 h-4 text-white" />
         </div>
-        <span className="font-display font-bold text-lg gradient-text">CampusConnect</span>
+        <span className="font-display font-bold text-lg text-white">CampusConnect</span>
       </div>
 
       {/* User Info */}
-      <div className="px-4 py-4 border-b border-dark-700/50">
+      <div className="px-4 py-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-primary-500/20 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white/20 flex items-center justify-center flex-shrink-0">
             {user?.profilePicture
               ? <img src={user.profilePicture} alt={user.name} className="w-full h-full object-cover" />
-              : <span className="text-primary-300 font-bold">{user?.name?.[0]?.toUpperCase()}</span>}
+              : <span className="text-white font-bold">{user?.name?.[0]?.toUpperCase()}</span>}
           </div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
-            <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${roleBadge[role]}`}>{role}</span>
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium capitalize bg-white/20 text-white">{role}</span>
           </div>
         </div>
       </div>
@@ -85,26 +85,21 @@ export default function DashboardLayout({ role }) {
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                 isActive
-                  ? 'text-primary-300 bg-primary-500/10 border border-primary-500/20'
-                  : 'text-dark-100 hover:text-white hover:bg-dark-800/70'
+                  ? 'text-white bg-white/25 shadow-sm font-semibold'
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
               }`
             }>
-            <Icon className="w-4 h-4 flex-shrink-0" />
+            {Icon && <Icon className="w-4 h-4 flex-shrink-0" />}
             <span>{label}</span>
           </NavLink>
         ))}
       </nav>
 
-      {/* Bottom Actions */}
-      <div className="px-3 py-4 border-t border-dark-700/50 space-y-1">
+      <div className="px-3 py-4 border-t border-white/10 space-y-1">
         <button onClick={toggleTheme}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-dark-100 hover:text-white hover:bg-dark-800/70 transition-all w-full text-left">
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all w-full text-left">
           {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-        </button>
-        <button onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all w-full text-left">
-          <LogOut className="w-4 h-4" /> Sign Out
         </button>
       </div>
     </div>
@@ -113,7 +108,7 @@ export default function DashboardLayout({ role }) {
   return (
     <div className="min-h-screen flex bg-dark-950">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-dark-900/80 backdrop-blur-sm border-r border-dark-700/50 fixed inset-y-0 left-0 z-30">
+      <aside className="hidden lg:flex flex-col w-64 bg-gradient-to-b from-primary-600 to-accent-600 fixed inset-y-0 left-0 z-30 shadow-lg">
         <SidebarContent />
       </aside>
 
@@ -121,7 +116,7 @@ export default function DashboardLayout({ role }) {
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <aside className="absolute left-0 inset-y-0 w-64 bg-dark-900 border-r border-dark-700/50 z-50">
+          <aside className="absolute left-0 inset-y-0 w-64 bg-gradient-to-b from-primary-600 to-accent-600 z-50 shadow-lg">
             <SidebarContent />
           </aside>
         </div>

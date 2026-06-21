@@ -57,7 +57,7 @@ export default function LoginPage() {
         </div>
 
         <div className="card p-8">
-          <h1 className="text-2xl font-display font-bold text-white mb-1">Welcome back! 👋</h1>
+          <h1 className="text-2xl font-display font-bold text-white mb-1">Welcome back!</h1>
           <p className="text-dark-100 text-sm mb-6">Sign in to your CampusConnect account</p>
 
           {/* Google Login */}
