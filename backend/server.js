@@ -23,6 +23,14 @@ require('./config/passport');
 
 const app = express();
 
+// Rewrite URL to prepend /api if stripped by Vercel's routePrefix routing
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && !req.url.startsWith('/health') && !req.url.startsWith('/uploads')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
 // ─── Security Middleware ───────────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }
