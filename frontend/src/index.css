@@ -325,18 +325,85 @@ body.light .bg-scrolled-nav .btn-icon:hover {
 
 html.dark body {
   background-color: #0A0F1D !important;
-  color: #E2E8F0 !important;
+  color: #FFFFFF !important;
   background-image: radial-gradient(ellipse at 20% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
                     radial-gradient(ellipse at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%) !important;
 }
 
+/* Background overrides for all tailwind classes */
+html.dark .bg-dark-950 {
+  background-color: #0A0F1D !important;
+}
+
+html.dark .bg-dark-950\/80 {
+  background-color: rgba(10, 15, 29, 0.8) !important;
+}
+
+html.dark .bg-dark-950\/95 {
+  background-color: rgba(10, 15, 29, 0.95) !important;
+}
+
+html.dark .bg-dark-900 {
+  background-color: #111827 !important;
+}
+
+html.dark .bg-dark-900\/40 {
+  background-color: rgba(17, 24, 39, 0.4) !important;
+}
+
+html.dark .bg-dark-900\/60 {
+  background-color: rgba(17, 24, 39, 0.6) !important;
+}
+
+html.dark .bg-dark-800 {
+  background-color: #1F2937 !important;
+}
+
+html.dark .bg-dark-800\/40 {
+  background-color: rgba(31, 41, 55, 0.4) !important;
+}
+
+html.dark .bg-dark-800\/60 {
+  background-color: rgba(31, 41, 55, 0.6) !important;
+}
+
+html.dark .bg-dark-800\/80 {
+  background-color: rgba(31, 41, 55, 0.8) !important;
+}
+
+html.dark .bg-dark-700 {
+  background-color: #374151 !important;
+}
+
+html.dark .bg-dark-700\/50 {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+html.dark .bg-dark-50 {
+  background-color: #0A0F1D !important;
+}
+
+/* Border overrides */
+html.dark .border-dark-200 {
+  border-color: #1F2937 !important;
+}
+
+html.dark .border-dark-700 {
+  border-color: #374151 !important;
+}
+
+html.dark .border-dark-700\/50 {
+  border-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Cards, Modals, Stats, Event Cards overrides */
 html.dark .card,
 html.dark .modal-content,
 html.dark .stat-card,
 html.dark .event-card {
   background-color: #111827 !important;
   border-color: #1F2937 !important;
-  color: #E2E8F0 !important;
+  color: #FFFFFF !important;
 }
 
 html.dark h1,
@@ -348,33 +415,93 @@ html.dark h6 {
   color: #FFFFFF !important;
 }
 
-html.dark .text-dark-300 {
-  color: #E2E8F0 !important;
+/* Text and Icon overrides - change all text and SVG strokes to appear in white color */
+html.dark .text-dark-300,
+html.dark svg.text-dark-300,
+html.dark svg.text-dark-300 *,
+html.dark .text-dark-300 * {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
 }
 
-html.dark .text-dark-100 {
-  color: #9CA3AF !important;
+html.dark .text-dark-100,
+html.dark svg.text-dark-100,
+html.dark svg.text-dark-100 *,
+html.dark .text-dark-100 * {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
 }
 
-html.dark .input {
+/* Ensure icons inside input relative wrappers are white in dark theme */
+html.dark .relative:has(input) svg,
+html.dark .relative:has(input) svg *,
+html.dark .relative:has(textarea) svg,
+html.dark .relative:has(textarea) svg *,
+html.dark .relative:has(select) svg,
+html.dark .relative:has(select) svg * {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+/* Inputs and interactive elements */
+html.dark .input,
+html.dark input,
+html.dark select,
+html.dark textarea,
+html.dark option,
+html.dark input.input,
+html.dark textarea.input,
+html.dark select.input {
   background-color: #1F2937 !important;
   border-color: #374151 !important;
   color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  caret-color: #FFFFFF !important;
 }
 
-html.dark .input::placeholder {
-  color: rgba(156, 163, 175, 0.5) !important;
+/* Placeholders inside inputs and textareas */
+html.dark .input::placeholder,
+html.dark input::placeholder,
+html.dark textarea::placeholder,
+html.dark input.input::placeholder,
+html.dark textarea.input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Autofill overrides for dark mode inputs */
+html.dark input:-webkit-autofill,
+html.dark input:-webkit-autofill:hover,
+html.dark input:-webkit-autofill:focus,
+html.dark textarea:-webkit-autofill,
+html.dark textarea:-webkit-autofill:hover,
+html.dark textarea:-webkit-autofill:focus,
+html.dark select:-webkit-autofill,
+html.dark select:-webkit-autofill:hover,
+html.dark select:-webkit-autofill:focus,
+html.dark input:autofill,
+html.dark input:autofill:hover,
+html.dark input:autofill:focus,
+html.dark textarea:autofill,
+html.dark textarea:autofill:hover,
+html.dark textarea:autofill:focus,
+html.dark select:autofill,
+html.dark select:autofill:hover,
+html.dark select:autofill:focus {
+  -webkit-text-fill-color: #FFFFFF !important;
+  -webkit-box-shadow: 0 0 0px 1000px #1F2937 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+  color: #FFFFFF !important;
 }
 
 html.dark .table th {
   background-color: #1F2937 !important;
   border-color: #374151 !important;
-  color: #E5E7EB !important;
+  color: #FFFFFF !important;
 }
 
 html.dark .table td {
   border-color: #1F2937 !important;
-  color: #D1D5DB !important;
+  color: #FFFFFF !important;
 }
 
 html.dark .table tr:hover td {
@@ -384,7 +511,7 @@ html.dark .table tr:hover td {
 html.dark .btn-secondary {
   background-color: #1F2937 !important;
   border-color: #374151 !important;
-  color: #E5E7EB !important;
+  color: #FFFFFF !important;
 }
 
 html.dark .btn-secondary:hover {
@@ -393,4 +520,11 @@ html.dark .btn-secondary:hover {
 
 html.dark ::-webkit-scrollbar-track {
   background-color: #111827 !important;
+}
+
+/* Scrolled Navbar Override in dark mode */
+html.dark .bg-scrolled-nav {
+  background-color: rgba(10, 15, 29, 0.8) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }

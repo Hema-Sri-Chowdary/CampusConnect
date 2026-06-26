@@ -57,8 +57,8 @@ exports.updateClub = async (req, res, next) => {
 // GET /api/clubs/my
 exports.getMyClub = async (req, res, next) => {
   try {
-    const club = await Club.findOne({ coordinatorId: req.user._id });
-    if (!club) return res.status(404).json({ success: false, message: 'No club found.' });
-    res.json({ success: true, data: club });
+    const clubs = await Club.find({ _id: { $in: req.user.managedClubs } })
+      .populate('coordinatorId', 'name email profilePicture');
+    res.json({ success: true, data: clubs });
   } catch (err) { next(err); }
 };

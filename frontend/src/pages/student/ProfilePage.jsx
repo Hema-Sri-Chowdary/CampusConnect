@@ -143,7 +143,7 @@ export default function ProfilePage() {
           <form onSubmit={hsPass(d => passMutation.mutate(d))} className="space-y-4">
             <div><label className="label">Current Password</label><div className="relative"><Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...regPass('currentPassword')} type="password" className="input pl-10" /></div></div>
             <div><label className="label">New Password</label><div className="relative"><Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-100" /><input {...regPass('newPassword')} type={showPass ? 'text' : 'password'} className="input pl-10 pr-10" /><button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-dark-100 hover:text-white">{showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button></div></div>
-            <button type="submit" disabled={passMutation.isPending} className="btn btn-secondary">{passMutation.isPending ? <div className="w-4 h-4 spinner" /> : 'Update Password'}</button>
+            <button type="submit" disabled={passMutation.isPending} className="btn btn-secondary">{passMutation.isPending ? <div className="w-4 h-4 spinner" /> : 'Change Password'}</button>
           </form>
         </div>
       )}

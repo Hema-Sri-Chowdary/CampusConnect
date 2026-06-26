@@ -57,7 +57,7 @@ export default function RegisterPage() {
   const toggleClub = (clubId) => {
     setSelectedClubs(prev => {
       if (prev.includes(clubId)) return prev.filter(id => id !== clubId);
-      if (prev.length >= 10) { toast.error('You can select at most 10 clubs'); return prev; }
+      if (prev.length >= 5) { toast.error('You can select at most 5 clubs'); return prev; }
       return [...prev, clubId];
     });
   };
@@ -201,7 +201,7 @@ export default function RegisterPage() {
             {role === 'coordinator' && (
               <div>
                 <label className="label">
-                  Select Your Club(s) <span className="text-dark-100">(choose 1–10)</span>
+                  Select Your Club(s) <span className="text-dark-100">(choose 1–5)</span>
                   {selectedClubs.length > 0 && (
                     <span className="ml-2 text-primary-400 font-semibold">{selectedClubs.length} selected</span>
                   )}

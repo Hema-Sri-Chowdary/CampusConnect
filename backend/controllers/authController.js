@@ -30,10 +30,18 @@ exports.register = async (req, res, next) => {
     const allowedRoles = ['student', 'coordinator'];
     const userRole = allowedRoles.includes(role) ? role : 'student';
 
-    // Validate coordinator email domain
+    // Validate coordinator email domain and club selection
     const VIT_DOMAINS = ['@vitapstudent.ac.in', '@vitap.ac.in', '@vit.ac.in'];
-    if (userRole === 'coordinator' && !VIT_DOMAINS.some(d => email.endsWith(d))) {
-      return res.status(400).json({ success: false, message: 'Coordinators must register with a VIT email (@vitapstudent.ac.in, @vitap.ac.in, or @vit.ac.in).' });
+    if (userRole === 'coordinator') {
+      if (!VIT_DOMAINS.some(d => email.endsWith(d))) {
+        return res.status(400).json({ success: false, message: 'Coordinators must register with a VIT email (@vitapstudent.ac.in, @vitap.ac.in, or @vit.ac.in).' });
+      }
+      if (!Array.isArray(managedClubs) || managedClubs.length === 0) {
+        return res.status(400).json({ success: false, message: 'Coordinators must select at least one club.' });
+      }
+      if (managedClubs.length > 5) {
+        return res.status(400).json({ success: false, message: 'Coordinators can register for a maximum of 5 clubs.' });
+      }
     }
 
     const otp = generateOTP();
@@ -45,11 +53,27 @@ exports.register = async (req, res, next) => {
       isApproved: true,
       otp: { code: otp, expiresAt: otpExpiry }
     };
-    if (userRole === 'coordinator' && Array.isArray(managedClubs) && managedClubs.length > 0) {
-      userData.managedClubs = managedClubs.slice(0, 10);
+    if (userRole === 'coordinator') {
+      userData.managedClubs = managedClubs;
     }
 
     const user = await User.create(userData);
+
+    if (userRole === 'coordinator' && Array.isArray(managedClubs) && managedClubs.length > 0) {
+      const Club = require('../models/Club');
+      await Promise.all(managedClubs.map(async (clubId) => {
+        const c = await Club.findById(clubId);
+        if (c) {
+          if (!c.coordinatorId) {
+            c.coordinatorId = user._id;
+          }
+          if (!c.coCoordinators.includes(user._id)) {
+            c.coCoordinators.push(user._id);
+          }
+          await c.save();
+        }
+      }));
+    }
     
     try {
       await sendOTPEmail(email, name, otp);

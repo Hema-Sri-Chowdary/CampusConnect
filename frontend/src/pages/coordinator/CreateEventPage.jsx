@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { eventsAPI } from '../../api/axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { eventsAPI, clubsAPI } from '../../api/axios';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { Upload, X } from 'lucide-react';
@@ -15,7 +15,19 @@ export default function CreateEventPage() {
   const [bannerFile, setBannerFile] = useState(null);
   const [bannerPreview, setBannerPreview] = useState(null);
   const [isFree, setIsFree] = useState(true);
-  const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: { mode: 'offline', category: 'technical', status: 'published' } });
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({ defaultValues: { mode: 'offline', category: 'technical', status: 'published' } });
+
+  const { data: clubsData, isLoading: clubsLoading } = useQuery({
+    queryKey: ['my-clubs'],
+    queryFn: () => clubsAPI.getMyClub().then(r => r.data)
+  });
+  const myClubs = clubsData?.data || [];
+
+  useEffect(() => {
+    if (myClubs.length === 1) {
+      setValue('clubId', myClubs[0]._id);
+    }
+  }, [myClubs, setValue]);
 
   const mutation = useMutation({
     mutationFn: (data) => {
@@ -44,6 +56,20 @@ export default function CreateEventPage() {
         </div>
         <div className="card p-6 space-y-4">
           <h2 className="font-semibold text-white">Event Details</h2>
+          <div>
+            <label className="label">Select Club *</label>
+            {clubsLoading ? (
+              <p className="text-sm text-dark-100 animate-pulse">Loading clubs...</p>
+            ) : (
+              <select {...register('clubId', { required: 'Club selection is required' })} className="input py-2">
+                <option value="">Choose a club</option>
+                {myClubs.map(c => (
+                  <option key={c._id} value={c._id}>{c.clubName}</option>
+                ))}
+              </select>
+            )}
+            {errors.clubId && <p className="text-red-400 text-xs mt-1">{errors.clubId.message}</p>}
+          </div>
           <div><label className="label">Event Title *</label><input {...register('title', { required: 'Title required' })} placeholder="e.g., Code Rush Hackathon 2024" className={`input ${errors.title ? 'input-error' : ''}`} />{errors.title && <p className="text-red-400 text-xs mt-1">{errors.title.message}</p>}</div>
           <div><label className="label">Short Description</label><input {...register('shortDescription')} placeholder="One-line description" className="input" /></div>
           <div><label className="label">Full Description *</label><textarea {...register('description', { required: 'Description required' })} rows={5} placeholder="Describe your event..." className={`input resize-none ${errors.description ? 'input-error' : ''}`} />{errors.description && <p className="text-red-400 text-xs mt-1">{errors.description.message}</p>}</div>

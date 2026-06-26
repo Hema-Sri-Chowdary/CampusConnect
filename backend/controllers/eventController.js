@@ -53,8 +53,22 @@ exports.getEvent = async (req, res, next) => {
 exports.createEvent = async (req, res, next) => {
   try {
     const coordinator = req.user;
-    const club = await Club.findOne({ coordinatorId: coordinator._id });
-    if (!club) return res.status(400).json({ success: false, message: 'No club associated with your account.' });
+    const { clubId, title } = req.body;
+
+    if (!clubId) {
+      return res.status(400).json({ success: false, message: 'Please specify the club for this event.' });
+    }
+
+    // Verify coordinator is authorized to create events for the specified club
+    const hasClub = coordinator.managedClubs && coordinator.managedClubs.some(
+      c => c.toString() === clubId.toString()
+    );
+    if (!hasClub && coordinator.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'You are not authorized to create events for this club.' });
+    }
+
+    const club = await Club.findById(clubId);
+    if (!club) return res.status(404).json({ success: false, message: 'Club not found.' });
 
     // Validate dates are not in the past
     const now = new Date();
@@ -65,7 +79,6 @@ exports.createEvent = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Registration deadline cannot be in the past.' });
     }
 
-    const { title } = req.body;
     let slug = slugify(title, { lower: true, strict: true });
     const existing = await Event.findOne({ slug });
     if (existing) slug = `${slug}-${Date.now()}`;
