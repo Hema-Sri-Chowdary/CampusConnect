@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
 import { eventsAPI, clubsAPI } from '../api/axios';
 import { format } from 'date-fns';
 import {
@@ -92,6 +93,12 @@ function EventCard({ event }) {
 }
 
 export default function HomePage() {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   const { data: eventsData } = useQuery({
     queryKey: ['events', 'upcoming'],
     queryFn: () => eventsAPI.getAll({ date: 'upcoming', limit: 6, sort: 'date' }).then(r => r.data)

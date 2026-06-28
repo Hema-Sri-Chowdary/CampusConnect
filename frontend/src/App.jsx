@@ -83,12 +83,12 @@ function App() {
     <Routes>
       {/* Public/External Routes */}
       <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
         <Route path="/verify-certificate/:code" element={<VerifyCertificatePage />} />
       </Route>
 
       {/* Protected Main App Routes */}
       <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
-        <Route path="/" element={<HomePage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventDetailPage />} />
         <Route path="/clubs" element={<ClubsPage />} />

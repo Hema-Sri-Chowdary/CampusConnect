@@ -419,7 +419,8 @@ html.dark h6 {
 html.dark .text-dark-300,
 html.dark svg.text-dark-300,
 html.dark svg.text-dark-300 *,
-html.dark .text-dark-300 * {
+html.dark .text-dark-300 *,
+html.dark .label {
   color: #FFFFFF !important;
   stroke: #FFFFFF !important;
 }

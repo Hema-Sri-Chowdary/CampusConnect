@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const passport = require('passport');
+const path = require('path');
 require('dotenv').config();
 
 // Import routes
@@ -69,7 +70,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(passport.initialize());
 
 // ─── Static Files ──────────────────────────────────────────────────────────────
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
