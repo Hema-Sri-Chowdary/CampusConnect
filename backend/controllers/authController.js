@@ -75,9 +75,11 @@ exports.register = async (req, res, next) => {
       }));
     }
     
+    let emailSent = true;
     try {
       await sendOTPEmail(email, name, otp);
     } catch (err) {
+      emailSent = false;
       console.error('❌ Email transporter failed to send registration OTP:', err.message);
       console.log(`🔑 [DEVELOPMENT ONLY] Registration OTP for ${email} is: ${otp}`);
     }
@@ -86,8 +88,8 @@ exports.register = async (req, res, next) => {
       success: true,
       message: 'Registration successful. Please verify your email with the OTP sent.',
       userId: user._id,
-      // In development: include OTP directly so it shows in the verify screen
-      ...(process.env.NODE_ENV !== 'production' && { devOtp: otp })
+      // In development: include OTP directly so it shows in the verify screen only if email failed
+      ...(process.env.NODE_ENV !== 'production' && !emailSent && { devOtp: otp })
     });
   } catch (err) {
     next(err);
@@ -135,14 +137,20 @@ exports.resendOTP = async (req, res, next) => {
     user.otp = { code: otp, expiresAt: getOTPExpiry(), attempts: 0 };
     await user.save();
     
+    let emailSent = true;
     try {
       await sendOTPEmail(user.email, user.name, otp);
     } catch (err) {
+      emailSent = false;
       console.error('❌ Email transporter failed to send verification OTP:', err.message);
       console.log(`🔑 [DEVELOPMENT ONLY] Verification OTP for ${user.email} is: ${otp}`);
     }
     
-    res.json({ success: true, message: 'OTP resent successfully.' });
+    res.json({ 
+      success: true, 
+      message: 'OTP resent successfully.',
+      ...(process.env.NODE_ENV !== 'production' && !emailSent && { devOtp: otp })
+    });
   } catch (err) {
     next(err);
   }
