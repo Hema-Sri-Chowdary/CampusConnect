@@ -8,9 +8,8 @@ const path = require('path');
 const isCloudinaryConfigured = 
   process.env.CLOUDINARY_CLOUD_NAME && 
   process.env.CLOUDINARY_API_KEY && 
-  process.env.CLOUDINARY_API_SECRET && 
-  process.env.CLOUDINARY_API_SECRET !== 'your_cloudinary_api_secret' &&
-  process.env.CLOUDINARY_API_SECRET !== 'RS_lTMaGj2naEFdXd6uwi9GA8E8';
+  process.env.CLOUDINARY_API_SECRET &&
+  process.env.CLOUDINARY_API_SECRET !== 'your_cloudinary_api_secret';
 
 let storage;
 

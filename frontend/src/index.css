@@ -66,9 +66,10 @@
   }
 
   .btn-secondary {
-    @apply bg-primary-500 hover:bg-primary-700 text-white border border-primary-500 focus:ring-primary-500 shadow-glow hover:shadow-glow-lg active:scale-95;
-    background-color: #4F46E5 !important;
-    color: #FFFFFF !important;
+    @apply bg-transparent hover:bg-dark-800/60 text-dark-300 border border-dark-700 focus:ring-primary-500 active:scale-95;
+    background-color: transparent !important;
+    color: #374151 !important;
+    border-color: #6B7280 !important;
   }
 
   .btn-outline {
@@ -110,10 +111,12 @@
 
   /* ─── Inputs ──────────────────────────────────────────────────────────── */
   .input {
-    @apply w-full px-4 py-3 bg-white border border-dark-200 text-dark-300 placeholder:text-dark-100/50 rounded-xl
+    @apply w-full px-4 py-3 border border-dark-200 text-dark-300 placeholder:text-dark-100/50 rounded-xl
            focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500
            transition-all duration-200;
+    background-color: #FFFFFF !important;
     color: #111827 !important;
+    border-color: #D1D5DB !important;
   }
 
   .input-error {
@@ -278,8 +281,6 @@ body.light .text-white {
 body.light .btn .text-white,
 body.light .btn-primary,
 body.light .btn-primary *,
-body.light .btn-secondary,
-body.light .btn-secondary *,
 body.light .btn-danger:hover,
 body.light .btn-danger:hover *,
 body.light .btn-success:hover,
@@ -306,6 +307,93 @@ body.light .keep-white,
 body.light .keep-white * {
   color: #FFFFFF !important;
 }
+
+/* Light mode: body and cards use white/light background */
+body.light {
+  background-color: #F3F4F6 !important;
+  color: #111827 !important;
+}
+
+body.light .card,
+body.light .modal-content,
+body.light .stat-card,
+body.light .event-card {
+  background-color: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+/* Light mode: all text in cards should be dark */
+body.light .card h1, body.light .card h2, body.light .card h3,
+body.light .card h4, body.light .card h5, body.light .card h6,
+body.light .card p, body.light .card span, body.light .card label,
+body.light .card .label, body.light h1, body.light h2, body.light h3 {
+  color: #111827 !important;
+}
+
+/* Light mode: inputs - white background with dark text */
+body.light .input,
+body.light input,
+body.light select,
+body.light textarea {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+body.light input::placeholder,
+body.light textarea::placeholder {
+  color: #9CA3AF !important;
+}
+
+/* Light mode: icon colors inside inputs */
+body.light .relative:has(input) svg,
+body.light .relative:has(textarea) svg,
+body.light .relative:has(select) svg {
+  color: #6B7280 !important;
+  stroke: #6B7280 !important;
+}
+
+/* Light mode: btn-secondary is gray/outlined */
+body.light .btn-secondary {
+  background-color: #F9FAFB !important;
+  border-color: #D1D5DB !important;
+  color: #374151 !important;
+}
+
+body.light .btn-secondary:hover {
+  background-color: #F3F4F6 !important;
+  border-color: #9CA3AF !important;
+}
+
+/* Light mode: labels and small text */
+body.light .label,
+body.light label {
+  color: #374151 !important;
+}
+
+/* Light mode: text-dark-100 and text-dark-300 visible */
+body.light .text-dark-100,
+body.light .text-dark-300 {
+  color: #6B7280 !important;
+}
+
+/* Light mode: sidebar (dashboard layout) */
+body.light .nav-link {
+  color: #374151 !important;
+}
+
+body.light .nav-link:hover {
+  background-color: #F3F4F6 !important;
+  color: #111827 !important;
+}
+
+body.light .nav-link.active {
+  color: #4F46E5 !important;
+  background-color: rgba(79,70,229,0.08) !important;
+}
+
 
 /* Scrolled Navbar Styling Rule in light mode */
 body.light .bg-scrolled-nav {
@@ -534,13 +622,14 @@ html.dark .table tr:hover td {
 }
 
 html.dark .btn-secondary {
-  background-color: #4F46E5 !important;
-  border-color: #4F46E5 !important;
-  color: #FFFFFF !important;
+  background-color: #1F2937 !important;
+  border-color: #4B5563 !important;
+  color: #F9FAFB !important;
 }
 
 html.dark .btn-secondary:hover {
-  background-color: #4338CA !important;
+  background-color: #374151 !important;
+  border-color: #6B7280 !important;
 }
 
 html.dark ::-webkit-scrollbar-track {
@@ -552,4 +641,72 @@ html.dark .bg-scrolled-nav {
   background-color: rgba(10, 15, 29, 0.8) !important;
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ─── Light Mode: Dashboard Layout ─────────────────────────────────────── */
+
+/* Dashboard wrapper background */
+body.light .min-h-screen.bg-dark-950 {
+  background-color: #F3F4F6 !important;
+}
+
+/* Dashboard top header bar */
+body.light header.sticky {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom-color: #E5E7EB !important;
+  backdrop-filter: blur(8px);
+}
+
+body.light header.sticky button,
+body.light header.sticky span,
+body.light header.sticky a {
+  color: #374151 !important;
+}
+
+/* Dashboard main content area */
+body.light main {
+  background-color: #F3F4F6 !important;
+}
+
+/* Table improvements in light mode */
+body.light .table th {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
+  color: #374151 !important;
+}
+
+body.light .table td {
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+body.light .table tr:hover td {
+  background-color: #F3F4F6 !important;
+}
+
+body.light .table-wrapper {
+  border-color: #E5E7EB !important;
+}
+
+/* Badge overrides for light mode (restore proper colors) */
+body.light .badge-primary { background-color: #EEF2FF !important; color: #4338CA !important; }
+body.light .badge-success { background-color: #D1FAE5 !important; color: #065F46 !important; }
+body.light .badge-warning { background-color: #FEF3C7 !important; color: #92400E !important; }
+body.light .badge-danger  { background-color: #FEE2E2 !important; color: #991B1B !important; }
+body.light .badge-info    { background-color: #DBEAFE !important; color: #1E40AF !important; }
+body.light .badge-gray    { background-color: #F3F4F6 !important; color: #374151 !important; }
+
+/* Spinner in light mode */
+body.light .spinner {
+  border-color: #E5E7EB !important;
+  border-top-color: #4F46E5 !important;
+}
+
+/* Fee/paid toggle buttons in CreateEvent light mode */
+body.light .bg-dark-800\/60 {
+  background-color: #F9FAFB !important;
+}
+
+body.light .border-dark-700 {
+  border-color: #D1D5DB !important;
 }
