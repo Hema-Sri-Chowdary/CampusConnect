@@ -89,7 +89,7 @@ export default function Navbar() {
                 <NavLink key={link.to} to={link.to}
                   className={({ isActive }) =>
                     `px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      isActive ? 'text-primary-300 bg-primary-500/10' : 'text-dark-100 hover:text-white hover:bg-dark-800/60'
+                      isActive ? 'text-primary-300 bg-primary-500/10' : `text-dark-100 hover:text-white hover:bg-dark-800/60 ${!scrolled ? 'keep-white' : ''}`
                     }`
                   }>
                   {link.label}
@@ -101,13 +101,13 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               {/* Search */}
               <button onClick={() => setSearchOpen(true)}
-                className="btn-icon text-dark-100 hover:text-white hover:bg-dark-800/60">
+                className={`btn-icon hover:text-white hover:bg-dark-800/60 ${!scrolled ? 'keep-white text-white' : 'text-dark-100'}`}>
                 <Search className="w-4 h-4" />
               </button>
 
               {/* Theme Toggle */}
               <button onClick={toggleTheme}
-                className="btn-icon text-dark-100 hover:text-white hover:bg-dark-800/60">
+                className={`btn-icon hover:text-white hover:bg-dark-800/60 ${!scrolled ? 'keep-white text-white' : 'text-dark-100'}`}>
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
 
@@ -165,7 +165,7 @@ export default function Navbar() {
                 </>
               ) : (
                 <div className="hidden md:flex items-center gap-2">
-                  <Link to="/login" className="btn btn-secondary text-sm">Login</Link>
+                  <Link to="/login" className={`btn btn-secondary text-sm ${!scrolled ? 'keep-white' : ''}`}>Login</Link>
                   <Link to="/register" className="btn btn-primary text-sm">Join Free</Link>
                 </div>
               )}

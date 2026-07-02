@@ -48,11 +48,14 @@ exports.register = async (req, res, next) => {
     const otpExpiry = getOTPExpiry();
 
     const userData = {
-      name, email, password, phone, college, studentId,
+      name, email, password, college,
       role: userRole,
       isApproved: true,
       otp: { code: otp, expiresAt: otpExpiry }
     };
+    // Only include optional fields when they have values
+    if (phone) userData.phone = phone;
+    if (studentId) userData.studentId = studentId;
     if (userRole === 'coordinator') {
       userData.managedClubs = managedClubs;
     }

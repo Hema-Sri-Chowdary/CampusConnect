@@ -12,7 +12,7 @@ const VIT_DOMAINS = ['@vitapstudent.ac.in', '@vitap.ac.in', '@vit.ac.in'];
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
-  phone: z.string().regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit mobile number'),
+  phone: z.string().regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit mobile number').optional().or(z.literal('')),
   college: z.string().min(2, 'College name required'),
   studentId: z.string().optional(),
   password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -74,12 +74,19 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       const { confirmPassword, ...payload } = data;
+      // Remove empty phone so backend optional validation passes
+      if (!payload.phone) delete payload.phone;
       if (data.role === 'coordinator') payload.managedClubs = selectedClubs;
       const res = await authAPI.register(payload);
       toast.success('Account created! Please verify your email.');
       navigate('/verify-otp', { state: { userId: res.data.userId, email: data.email, devOtp: res.data.devOtp } });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      const message = err.response?.data?.message
+        || err.response?.data?.errors?.[0]
+        || err.message
+        || 'Registration failed. Please try again.';
+      toast.error(message);
+      console.error('Registration error:', err.response?.data || err);
     } finally {
       setLoading(false);
     }
@@ -221,18 +228,22 @@ export default function RegisterPage() {
                           key={club._id}
                           type="button"
                           onClick={() => toggleClub(club._id)}
-                          className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left text-sm transition-all ${
-                            isSelected
-                              ? 'bg-primary-500/20 border-primary-500/60 text-primary-300'
-                              : 'bg-dark-800/60 border-dark-700 text-dark-100 hover:border-dark-600 hover:text-white'
+                          style={{
+                            backgroundColor: isSelected ? 'rgba(79,70,229,0.85)' : 'rgba(100,116,139,0.15)',
+                            borderColor: isSelected ? '#6366f1' : 'rgba(100,116,139,0.4)',
+                            color: isSelected ? '#ffffff' : 'inherit',
+                          }}
+                          className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left text-sm transition-all font-medium ${
+                            isSelected ? 'shadow-md' : 'hover:border-primary-400 hover:bg-primary-500/10'
                           }`}
                         >
-                          <span className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 transition-all ${
-                            isSelected ? 'bg-primary-500' : 'border border-dark-600'
-                          }`}>
-                            {isSelected && <Check className="w-3 h-3 text-white" />}
+                          <span style={{
+                            backgroundColor: isSelected ? '#ffffff' : 'transparent',
+                            borderColor: isSelected ? '#6366f1' : '#94a3b8',
+                          }} className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border transition-all`}>
+                            {isSelected && <Check className="w-3 h-3" style={{ color: '#4F46E5' }} />}
                           </span>
-                          <span className="truncate font-medium">{club.clubName}</span>
+                          <span className="truncate">{club.clubName}</span>
                         </button>
                       );
                     })}

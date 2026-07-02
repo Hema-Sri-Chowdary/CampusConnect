@@ -32,8 +32,30 @@ export default function CreateEventPage() {
   const mutation = useMutation({
     mutationFn: (data) => {
       const fd = new FormData();
-      Object.entries(data).forEach(([k, v]) => { if (v !== undefined && v !== '') fd.append(k, v); });
-      fd.set('feeStructure[isFree]', isFree);
+
+      // Helper: flatten nested objects into bracket notation for FormData
+      const appendToFd = (prefix, val) => {
+        if (val === undefined || val === null || val === '') return;
+        if (typeof val === 'object' && !(val instanceof File)) {
+          Object.entries(val).forEach(([k, v]) => appendToFd(`${prefix}[${k}]`, v));
+        } else {
+          fd.append(prefix, val);
+        }
+      };
+
+      Object.entries(data).forEach(([k, v]) => {
+        // Skip nested sub-objects that we'll handle below, skip feeStructure.isFree (set manually)
+        if (k === 'feeStructure') return;
+        appendToFd(k, v);
+      });
+
+      // Fee structure
+      fd.append('feeStructure[isFree]', isFree);
+      if (!isFree && data.feeStructure) {
+        if (data.feeStructure.vitapFee !== undefined) fd.append('feeStructure[vitapFee]', data.feeStructure.vitapFee);
+        if (data.feeStructure.externalFee !== undefined) fd.append('feeStructure[externalFee]', data.feeStructure.externalFee);
+      }
+
       if (bannerFile) fd.append('image', bannerFile);
       return eventsAPI.create(fd);
     },

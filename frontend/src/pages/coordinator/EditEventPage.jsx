@@ -18,9 +18,22 @@ export default function EditEventPage() {
     }
   }, [data, reset]);
   const mutation = useMutation({
-    mutationFn: (d) => eventsAPI.update(id, d),
+    mutationFn: (d) => {
+      // Convert dot-notation keys to nested objects for proper JSON submission
+      const nested = {};
+      Object.entries(d).forEach(([key, val]) => {
+        const parts = key.split('.');
+        if (parts.length === 2) {
+          if (!nested[parts[0]]) nested[parts[0]] = {};
+          nested[parts[0]][parts[1]] = val;
+        } else {
+          nested[key] = val;
+        }
+      });
+      return eventsAPI.update(id, nested);
+    },
     onSuccess: () => { qc.invalidateQueries(['my-events']); toast.success('Event updated!'); navigate('/coordinator/events'); },
-    onError: () => toast.error('Update failed')
+    onError: (err) => toast.error(err.response?.data?.message || 'Update failed')
   });
   return (
     <div className="animate-fade-in max-w-3xl">
