@@ -99,7 +99,7 @@ export default function ProfilePage() {
             </div>
             <label htmlFor="avatar-upload" className="absolute -bottom-2 -right-2 w-7 h-7 bg-primary-500 rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary-600 transition-colors">
               <Camera className="w-3.5 h-3.5 text-white" />
-              <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files[0]; if(f) setAvatarPreview(URL.createObjectURL(f)); }} />
+              <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files[0]; if (f) setAvatarPreview(URL.createObjectURL(f)); }} />
             </label>
           </div>
           <div>

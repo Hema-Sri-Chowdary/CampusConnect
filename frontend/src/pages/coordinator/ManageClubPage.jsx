@@ -42,7 +42,7 @@ export default function ManageClubPage() {
   return (
     <div className="animate-fade-in max-w-2xl space-y-6">
       <h1 className="text-2xl font-display font-bold text-white">My Clubs</h1>
-      
+
       {clubs.length > 1 && (
         <div className="card p-6">
           <label className="label font-semibold text-white mb-2 block">Select Club to Manage</label>

@@ -25,8 +25,7 @@ if (isCloudinaryConfigured && process.env.USE_LOCAL_STORAGE !== 'true') {
 
       return {
         folder,
-        allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        transformation: [{ width: 1200, crop: 'limit', quality: 'auto', fetch_format: 'auto' }],
+        transformation: [{ width: 1200, crop: 'limit', quality: 'auto' }],
       };
     },
   });
